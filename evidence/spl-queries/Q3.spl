@@ -1,0 +1,2 @@
+﻿index=botsv3 sourcetype=hardware
+| table host CPU_TYPE CPU_COUNT CPU_CACHE HARD_DRIVES

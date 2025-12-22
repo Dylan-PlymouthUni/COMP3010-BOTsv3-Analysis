@@ -1,0 +1,3 @@
+﻿index=botsv3 sourcetype=aws:cloudtrail userIdentity.type=IAMUser earliest=0
+| stats count by userIdentity.userName
+| sort userIdentity.userName

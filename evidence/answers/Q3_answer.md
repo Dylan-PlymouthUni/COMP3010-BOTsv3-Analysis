@@ -1,0 +1,1 @@
+﻿Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz

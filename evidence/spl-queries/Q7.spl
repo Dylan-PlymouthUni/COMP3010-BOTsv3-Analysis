@@ -1,0 +1,4 @@
+﻿index=botsv3 sourcetype=aws:s3:accesslogs "REST.PUT.OBJECT"
+| rex field=_raw "PUT\s+\/(?<bucket>[^\/]+)\/(?<filename>[^\s]+)"
+| table _time bucket filename
+| sort 0 _time
