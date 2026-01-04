@@ -1,8 +1,8 @@
-COMP3010 – Security Operations & Incident Management
+COMP3010 Security Operations & Incident Management
 
 BOTSv3 SOC Investigation Report
 
-1. Introduction (10%)
+1. Introduction 
 
 Security Operations Centres (SOCs) play a critical role in modern organisations by providing continuous monitoring, detection, analysis, and response to security incidents across complex infrastructures. With the widespread adoption of cloud services and hybrid environments, SOC analysts must be capable of correlating endpoint, network, and cloud telemetry to identify misconfigurations, misuse, and malicious activity.
 
@@ -23,7 +23,7 @@ The BOTSv3 dataset represents a simulated but realistic enterprise environment
 All timestamps and events are treated as ground truth for investigative purposes The investigation is conducted from the perspective of a SOC analyst responding post-incident
 
 
-2. SOC Roles & Incident Handling Reflection (10%)
+2. SOC Roles & Incident Handling Reflection 
 
 A mature SOC typically operates using a tiered structure:
 
@@ -45,7 +45,7 @@ The incident handling lifecycle applied throughout this investigation aligns wit
 This structured approach ensures findings are actionable and defensible within an operational SOC environment.
 
 
-3. Installation & Data Preparation (15%)
+3. Installation & Data Preparation 
 
 Splunk Environment Setup
 
@@ -73,12 +73,12 @@ Splunk was selected due to its strength in:
 Field extraction was leveraged where necessary using `rex` and `spath` to ensure precise data retrieval, reflecting realistic SOC investigative practice.
 
 
-4. Guided Questions – AWS & Endpoint Investigation (40%)
+4. Guided Questions: AWS & Endpoint Investigation 
 
 This section presents a complete answer set to BOTSv3’s AWS-focused 200-level questions. Each question includes the investigative approach, SPL query, evidence, and SOC relevance.
 
 
-Question 1 – IAM Users Accessing AWS Services
+Question 1: IAM Users Accessing AWS Services
 
 Objective: Identify IAM users that accessed AWS services successfully or unsuccessfully.
 
@@ -97,7 +97,7 @@ SOC Relevance:
 Enumerating IAM user activity is a foundational SOC task, enabling attribution, baseline behaviour analysis, and detection of compromised or misused credentials.
 
 
-Question 2 – AWS API Activity Without MFA
+Question 2: AWS API Activity Without MFA
 
 Objective: Identify the field indicating AWS API activity performed without MFA.
 
@@ -108,7 +108,7 @@ SOC Relevance:
 API activity without MFA represents elevated risk. SOC teams routinely monitor this field to enforce strong authentication controls and trigger alerts.
 
 
-Question 3 – Processor Number Used on Web Servers
+Question 3: Processor Number Used on Web Servers
 
 Objective: Identify the processor model used by web servers.
 
@@ -126,7 +126,7 @@ Hardware awareness supports capacity planning, forensic consistency checks, and 
 
 
 
-Question 4 – Event Enabling Public S3 Access
+Question 4: Event Enabling Public S3 Access
 
 Objective: Identify the CloudTrail event ID that enabled public S3 access.
 
@@ -145,7 +145,7 @@ Tracking configuration-change events is critical for identifying cloud misconfig
 
 
 
-Question 5 – Bud’s Username
+Question 5: Bud’s Username
 
 Answer:
 `bstoll`
@@ -155,7 +155,7 @@ Clear user attribution supports accountability, insider threat analysis, and cor
 
 
 
-Question 6 – Publicly Accessible S3 Bucket Name
+Question 6: Publicly Accessible S3 Bucket Name
 
 **Answer**:
 `frothlywebcode`
@@ -200,7 +200,7 @@ SOC Relevance:
 Endpoint discrepancies may indicate elevated privilege systems, exceptions, or misconfigurations requiring further scrutiny.
 
 
-5. Conclusion & Recommendations (5%)
+5. Conclusion & Recommendations 
 
 This investigation identified a clear sequence of events resulting in unintended public exposure of an S3 bucket, attributable to IAM user activity. Correlation across AWS and endpoint telemetry demonstrated the importance of unified visibility within a SOC.
 
