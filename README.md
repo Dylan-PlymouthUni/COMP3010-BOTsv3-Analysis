@@ -131,8 +131,8 @@ To verify MFA status values, I used:
 
 ```spl
 index=botsv3 sourcetype=aws:cloudtrail eventName=ConsoleLogin
-| spath output=mfa path=userIdentity.sessionContext. attributes.mfaAuthenticated
-| table _time userIdentity.userName sourceIPAddress mfa
+| spath
+| table _time userIdentity.userName sourceIPAddress userIdentity.sessionContext.attributes.mfaAuthenticated
 | sort 0 _time
 ```
 
@@ -238,9 +238,8 @@ I searched S3 access logs for PUT operations (file uploads) to see if anyone upl
 Query: [evidence/spl-queries/Q7.spl](evidence/spl-queries/Q7.spl)
 
 ```spl
-index=botsv3 sourcetype=aws:s3:accesslogs "PUT" "OPEN_BUCKET_PLEASE_FIX.txt"
-| rex field=_raw "PUT\s+/(? <bucket>[^/]+)/(?<object>\S+)"
-| table _time bucket object
+index=botsv3 sourcetype=aws:s3:accesslogs "OPEN_BUCKET_PLEASE_FIX"
+| table _time bucket key operation
 | sort 0 _time
 ```
 
@@ -280,21 +279,19 @@ Why this matters: Configuration drift can indicate several things - maybe this i
 To understand the sequence of events, I needed to correlate the ACL change with the file upload. Here's a query that shows both events in chronological order:
 
 ```spl
-(
-  index=botsv3 sourcetype=aws:cloudtrail eventName=PutBucketAcl requestParameters.bucketName=frothlywebcode
-  | eval event="PutBucketAcl"
-  | eval actor=userIdentity.userName
-  | eval artifact=requestParameters.bucketName
-  | table _time event actor artifact
-)
-OR
-(
-  index=botsv3 sourcetype=aws:s3:accesslogs "PUT" "OPEN_BUCKET_PLEASE_FIX.txt"
-  | eval event="S3 PUT object"
-  | eval actor="unattributed"
-  | eval artifact="OPEN_BUCKET_PLEASE_FIX.txt"
-  | table _time event actor artifact
-)
+index=botsv3 sourcetype=aws:cloudtrail eventName=PutBucketAcl requestParameters.bucketName=frothlywebcode
+| eval event_type="PutBucketAcl (Bucket Made Public)"
+| eval actor=userIdentity.userName
+| eval artifact=requestParameters.bucketName
+| table _time event_type actor artifact sourceIPAddress
+| append [
+    search index=botsv3 sourcetype=aws:s3:accesslogs operation=REST.PUT.OBJECT
+    | search key="*OPEN_BUCKET*"
+    | eval event_type="S3 Object Upload"
+    | eval actor="Unattributed (S3 access logs)"
+    | eval artifact=key
+    | table _time event_type actor artifact
+]
 | sort 0 _time
 ```
 
