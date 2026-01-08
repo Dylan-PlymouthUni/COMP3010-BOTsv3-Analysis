@@ -1,3 +1,0 @@
-﻿index=botsv3 sourcetype=aws:cloudtrail eventName=PutBucketAcl
-| stats count by userIdentity.userName
-| sort - count
